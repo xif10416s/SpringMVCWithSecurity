@@ -8,12 +8,12 @@
 	<!-- No Authentication Urls -->
 	<security:http pattern="resources" security="none"></security:http>
 	
-	<!-- Ajax http without csrf -->
+	<!-- 登录权限过滤 -->
 	<security:http pattern="/auth/**"
 		entry-point-ref="http403EntryPoint"
 		authentication-manager-ref="authManager">
 		<security:intercept-url pattern="/**" access="permitAll()" />
-		<security:custom-filter ref="myLoginFilter" position="FORM_LOGIN_FILTER"/>
+		<security:custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER"/>
 		<security:logout logout-url="/auth/logout"
 			logout-success-url="/auth/logout/success" />
 		<security:csrf disabled="true"/>
@@ -21,10 +21,10 @@
 			error-page="/auth/access-denied" />
 	</security:http>
 
-	<!-- Data http with csrf -->
+	<!-- 业务请求过滤 -->
 	<security:http auto-config="true"
 		authentication-manager-ref="authManager">
-		<security:intercept-url pattern="/data/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_OPERATOR','ROLE_BUSINESS','ROLE_FINANCE')"/>
+		<security:intercept-url pattern="/service/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_OPERATOR','ROLE_BUSINESS','ROLE_FINANCE')"/>
 		<security:csrf disabled="true"/>
 		<security:access-denied-handler
 			error-page="/auth/access-denied" />
@@ -37,7 +37,7 @@
 	</security:authentication-manager>
 	
 	<bean id="rememberMeTokenRepo"
-		class="com.hq.advertiser.auth.server.impl.PersistentLoginServiceImpl">
+		class="org.fxi.auth.service.impl.PersistentLoginServiceImpl">
 	</bean>
 	
 	<bean id="authProvider"
@@ -52,23 +52,33 @@
 		<property name="usersByUsernameQuery" value="SELECT email, password, enabled FROM ml_as_users WHERE email = ?"></property>
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
-	<bean id="md5PasswordEncoder"
-		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder">
-	</bean>
+
 	
-	<bean id="myLoginFilter" class="com.hq.advertiser.web.filter.CustomAuthenticationFilter">
+	<bean id="loginFilter" class="org.fxi.auth.filter.CustomAuthenticationFilter">
 		<property name="authenticationManager" ref="authManager" />
 		<property name="usernameParameter" value="email" />
 		<property name="passwordParameter" value="password" />
 		<property name="filterProcessesUrl" value="/auth/login"/>
 		<property name="authenticationSuccessHandler">
-			<bean class="com.hq.advertiser.web.handler.LoginSuccessHandler"></bean>
+			<bean class="org.fxi.auth.controller.LoginSuccessHandler"></bean>
 		</property>
 		<property name="authenticationFailureHandler">
-			<bean class="com.hq.advertiser.web.handler.LoginFailureHandler"></bean>
+			<bean class="org.fxi.auth.controller.LoginFailureHandler"></bean>
 		</property>
 	</bean>
 	
 	<bean id="http403EntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" />
-	
+
+	<bean id="md5PasswordEncoder"
+		  class="org.springframework.security.authentication.encoding.Md5PasswordEncoder">
+	</bean>
+	<!-- test -->
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:password-encoder ref="md5PasswordEncoder"/>
+			<security:user-service>
+				<security:user name="test" password="96e79218965eb72c92a549dd5a330112" authorities="ROLE_USER, ROLE_ADMIN" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
 </beans>
