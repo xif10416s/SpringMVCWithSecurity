@@ -12,5 +12,10 @@
 </head>
 <body>
 <h1>hello</h1>
+<form action="/spring/auth/login" method="post">
+    <input type="text" name="email"></input>
+    <input type="text" name="password"></input>
+    <input type="submit"></input>
+</form>
 </body>
 </html>

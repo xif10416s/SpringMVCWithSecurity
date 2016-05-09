@@ -20,6 +20,7 @@ CREATE TABLE `users` (
   `email` varchar(100) NOT NULL,
   `name` varchar(20) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`userId`),
   UNIQUE KEY `email` (`email`) USING BTREE,
   UNIQUE KEY `phone` (`phone`) USING BTREE

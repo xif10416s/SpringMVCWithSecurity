@@ -27,6 +27,9 @@ public class User {
 	@Column
 	private String phone;
 
+	@Column(nullable=false)
+	private Boolean enabled;
+
 	@Transient
 	private List<String> authorities;
 
@@ -86,4 +89,11 @@ public class User {
 		this.phone = phone;
 	}
 
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
 }

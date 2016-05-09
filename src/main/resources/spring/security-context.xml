@@ -23,7 +23,7 @@
 
 	<!-- 业务请求过滤 -->
 	<security:http auto-config="true"
-		authentication-manager-ref="authManager">
+		authentication-manager-ref="testAuthManager">
 		<security:intercept-url pattern="/service/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
 		<security:csrf disabled="true"/>
 		<security:access-denied-handler
@@ -31,6 +31,15 @@
 	</security:http>
 
 	<!-- Authority management in memory -->
+	<!-- test -->
+	<security:authentication-manager id="testAuthManager">
+		<security:authentication-provider>
+			<security:password-encoder ref="md5PasswordEncoder"/>
+			<security:user-service>
+				<security:user name="test" password="96e79218965eb72c92a549dd5a330112" authorities="ROLE_USER, ROLE_ADMIN" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
 	
 	<security:authentication-manager id="authManager">
 		<security:authentication-provider ref="authProvider"></security:authentication-provider>
@@ -48,8 +57,8 @@
 	</bean>
 	<bean id="jdbcUserService"
 		class="org.springframework.security.provisioning.JdbcUserDetailsManager">
-		<property name="authoritiesByUsernameQuery" value="SELECT users.email, authority FROM ml_as_users users LEFT OUTER JOIN ml_as_user_authorities auths ON users.userId = auths.userId WHERE users.email = ?"></property>
-		<property name="usersByUsernameQuery" value="SELECT email, password, enabled FROM ml_as_users WHERE email = ?"></property>
+		<property name="authoritiesByUsernameQuery" value="SELECT users.email, authority FROM users users LEFT OUTER JOIN user_authorities auths ON users.userId = auths.userId WHERE users.email = ?"></property>
+		<property name="usersByUsernameQuery" value="SELECT email, password, 1 FROM users WHERE email = ?"></property>
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
@@ -72,13 +81,5 @@
 	<bean id="md5PasswordEncoder"
 		  class="org.springframework.security.authentication.encoding.Md5PasswordEncoder">
 	</bean>
-	<!-- test -->
-	<security:authentication-manager>
-		<security:authentication-provider>
-			<security:password-encoder ref="md5PasswordEncoder"/>
-			<security:user-service>
-				<security:user name="test" password="96e79218965eb72c92a549dd5a330112" authorities="ROLE_USER, ROLE_ADMIN" />
-			</security:user-service>
-		</security:authentication-provider>
-	</security:authentication-manager>
+
 </beans>
