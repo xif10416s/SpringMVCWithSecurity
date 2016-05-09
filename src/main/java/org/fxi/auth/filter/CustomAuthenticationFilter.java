@@ -17,6 +17,10 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
+/**
+ * 参数预处理
+ * 认证
+ */
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	
 	@Override
