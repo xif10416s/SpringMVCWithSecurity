@@ -23,16 +23,16 @@
 
 	<!-- 业务请求过滤 -->
 	<security:http auto-config="true"
-		authentication-manager-ref="testAuthManager">
-		<security:intercept-url pattern="/service/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		authentication-manager-ref="authManager">
+		<security:intercept-url pattern="/service/admin/**" access="hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')"/>
 		<security:csrf disabled="true"/>
 		<security:access-denied-handler
 			error-page="/auth/access-denied" />
 	</security:http>
 
 	<!-- Authority management in memory -->
-	<!-- test -->
-	<security:authentication-manager id="testAuthManager">
+	<!-- test
+	<security:authentication-manager id="authManager">
 		<security:authentication-provider>
 			<security:password-encoder ref="md5PasswordEncoder"/>
 			<security:user-service>
@@ -40,11 +40,12 @@
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>
-	
+	-->
+	<!-- -->
 	<security:authentication-manager id="authManager">
 		<security:authentication-provider ref="authProvider"></security:authentication-provider>
 	</security:authentication-manager>
-	
+
 	<bean id="rememberMeTokenRepo"
 		class="org.fxi.auth.service.impl.PersistentLoginServiceImpl">
 	</bean>
@@ -63,7 +64,7 @@
 	</bean>
 
 	
-	<bean id="loginFilter" class="org.fxi.auth.filter.CustomAuthenticationFilter">
+	<bean id="loginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
 		<property name="authenticationManager" ref="authManager" />
 		<property name="usernameParameter" value="email" />
 		<property name="passwordParameter" value="password" />

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 public class BaseController {
 	
-	public final static String BASE_URI = "/advertiser-system/";
-    public final static String SESSION_ATTR_ADPROVIDER = "ADPROVIDER";
+	public final static String BASE_URI = "/spring/";
+    public final static String SESSION_ATTR_USER = "SESSION_ATTR_USER";
 
 	protected final static Locale locale = Locale.CHINA;
 	

@@ -25,3 +25,9 @@ CREATE TABLE `users` (
   UNIQUE KEY `email` (`email`) USING BTREE,
   UNIQUE KEY `phone` (`phone`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#----------
+INSERT INTO `test`.`users` (`userId`, `password`, `email`, `name`, `enabled`) VALUES ('2', '96e79218965eb72c92a549dd5a330112', 'test@163.com', 'sky', '1');
+
+INSERT INTO `test`.`user_authorities` (`authority`, `userId`) VALUES ('ROLE_USER', '1');
+INSERT INTO `test`.`user_authorities` (`authority`, `userId`) VALUES ('ROLE_ADMIN', '1');
